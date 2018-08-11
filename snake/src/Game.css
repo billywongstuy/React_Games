@@ -12,12 +12,17 @@ td {
     height: 15px;
     border: 1px solid black;
     vertical-align: center;
-}
-
-.empty {
     background-color: white;
 }
 
 .head {
+    background-color: darkgreen;
+}
+
+.tail {
+    background-color: lightgreen;
+}
+
+.apple {
     background-color: red;
 }
