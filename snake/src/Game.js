@@ -40,7 +40,7 @@ class Board extends Component {
 
         const filledSquares = {};
         for (var i = 0; i < this.props.bodyParts.length; i++) {
-            filledSquares[this.props.bodyParts[i].join(',')] = (i === 0) ? 'square head' : 'square tail';
+            filledSquares[this.props.bodyParts.get(i).join(',')] = (i === 0) ? 'square head' : 'square tail';
         }
         if (this.props.appleLocation) {
             filledSquares[this.props.appleLocation.join(',')] = 'square apple';
@@ -106,7 +106,8 @@ class Game extends Component {
         const intervalId = setInterval(this.runTurn, 500);
         this.state = {
             isPlaying: false,
-            bodyParts: [[5,5], [5,4], [5,3]],
+            bodyParts: new Deque([[5,5], [5,4], [5,3]]),
+            tailEndCache: null,
             direction: null,
             appleLocation: null,
             intervalId: intervalId
@@ -116,10 +117,25 @@ class Game extends Component {
 
     handleKeyDown(event) {
         if (event.key === 'ArrowUp' || event.key === 'ArrowDown' || event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-            const directions = {'ArrowUp': 'U', 'ArrowDown': 'D', 'ArrowLeft': 'L', 'ArrowRight': 'R'};
+
+            //quick presses between non-opposite then opposite causes problems
+            var direction = this.state.direction;
+            if (event.key === 'ArrowUp' && this.state.direction !== 'D') {
+                direction = 'U';
+            }
+            if (event.key === 'ArrowDown' && this.state.direction !== 'U') {
+                direction = 'D';
+            }
+            if (event.key === 'ArrowLeft' && this.state.direction !== 'R') {
+                direction = 'L';
+            }
+            if (event.key === 'ArrowRight' && this.state.direction !== 'L') {
+                direction = 'R';
+            }
+
             this.setState(
                 {
-                    direction: directions[event.key],
+                    direction: direction,
                     isPlaying: true
                 }
             )
@@ -142,7 +158,7 @@ class Game extends Component {
             const filledSquares = {};
             var i;
             for (i = 0; i < this.state.bodyParts.length; i++) {
-                filledSquares[this.state.bodyParts[i].join(',')] = true;
+                filledSquares[this.state.bodyParts.get(i).join(',')] = true;
             }
             for (i = 0; i < this.props.height; i++) {
                 for (var j = 0; j < this.props.width; j++) {
@@ -159,8 +175,8 @@ class Game extends Component {
 
     moveSnake() {
         if (this.state.isPlaying) {
-            const bodyParts = this.state.bodyParts.slice();
-            const head = bodyParts[0];
+            const bodyParts = new Deque(this.state.bodyParts.toArray());
+            const head = bodyParts.get(0);
 
             if (head[0] < 0 || head[0] >= this.props.height || head[1] < 0 || head[1] >= this.props.width) {
                 this.setState({
@@ -186,7 +202,7 @@ class Game extends Component {
                 bodyParts.unshift([head[0], head[1] + 1]);
                 //head[1] += 1;
             }
-            bodyParts.pop();
+            const tailEndCache = bodyParts.pop(); //don't pop if ate a fruit???
 
             //lag issues - possibly replace with my own data structure - deque
             //write iterator and everything
@@ -194,14 +210,15 @@ class Game extends Component {
             //move the tail - move each part to the one before it? aka pop the last one, add new one in front?
 
             this.setState({
-                bodyParts: bodyParts
+                bodyParts: bodyParts,
+                tailEndCache: tailEndCache
             })
         }
     }
 
     handleInteractions() {
-        const bodyParts = this.state.bodyParts.slice();
-        const head = bodyParts[0];
+        const bodyParts = new Deque(this.state.bodyParts.toArray());
+        const head = bodyParts.get(0);
         const appleLocation = this.state.appleLocation;
 
         if (head[0] === appleLocation[0] && head[1] === appleLocation[1]) {
@@ -209,6 +226,8 @@ class Game extends Component {
             this.generateApple();
             this.forceUpdate(); //kind of hacky
             //add a tail part
+            bodyParts.push(this.state.tailEndCache);
+            this.setState({bodyParts: bodyParts});
         }
     }
 
