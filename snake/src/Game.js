@@ -12,6 +12,7 @@ class Board extends Component {
         }
     }
 
+    /*
     renderSquare(squareData) {
         var className = 'square';
         if (squareData === 'H') {
@@ -37,20 +38,71 @@ class Board extends Component {
             )
         });
     }
+    */
+
+    renderSquare(rowNum, squareNum) {
+        var className = 'square';
+        for (var i = 0; i < this.props.bodyParts.length; i++) {
+            if (rowNum === this.props.bodyParts[i][0] && squareNum === this.props.bodyParts[i][1]) {
+                if (i == 0) {
+                    className += ' head';
+                }
+                else {
+                    className += ' tail';
+                }
+            }
+            else {
+                className += ' empty';
+            }
+        }
+
+        return (
+            <div className={className}></div>
+        );
+    }
+
+    renderRow(rowNum) {
+        const arr = [];
+        for (var i = 0; i < this.props.width; i++) {
+            arr.push(
+                <td key={i}>
+                    {this.renderSquare(rowNum, i)}
+                </td>
+            )
+        }
+        return arr;
+    }
+
 
     render() {
+        /*
         const data = this.state.data.slice();
 
         //Should I change how it's rendered?
         //Currently, it's based on data, which I have to update all the time
         //Maybe just render each square normally, then add classes to each of the head and body?
+
         const tablebody = data.map((rowData, rowNum) => {
             return (
                 <tr key={rowNum}>
                     {this.renderRow(rowData, rowNum)}
                 </tr>
             )
-        })
+        });
+        */
+
+        const tablebody = ((arr) => {
+            for (var i = 0; i < this.props.height; i++) {
+                arr.push(
+                    <tr key={i}>
+                        {this.renderRow(i)}
+                    </tr>
+                );
+            }
+            return arr;
+        })([]);
+
+        console.log(tablebody);
 
         return (
             <table>
@@ -79,8 +131,8 @@ class Game extends Component {
         this.state = {
             data: dataArray,
             isPlaying: false,
-            head: [5,5],
-            bodyParts: [],
+            head: [5,5], //eventually get of this anf only store in bodyparts
+            bodyParts: [[5,5]],
             direction: null,
             intervalId: intervalId
         };
@@ -124,7 +176,8 @@ class Game extends Component {
     moveSnake() {
         if (this.state.isPlaying) {
             const dataCopy = this.state.data.slice();
-            const head = this.state.head.slice();
+            const bodyParts = this.state.bodyParts.slice();
+            const head = bodyParts[0];
 
             //need to check for edge cases, aka game over
             //also check for eating itself later
@@ -173,7 +226,11 @@ class Game extends Component {
         return (
             <div>
                 <div>Hello</div>
-                <Board width={this.props.width} height={this.props.height} data={this.state.data}/>
+                <Board
+                    width={this.props.width}
+                    height={this.props.height}
+                    bodyParts={this.state.bodyParts}
+                />
             </div>
         );
     }
