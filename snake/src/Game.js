@@ -16,20 +16,19 @@ class Game extends Component {
 
         const intervalId = setInterval(this.runTurn, 300);
         this.state = {
-            isPlaying: false,
-            bodyParts: new Deque([[5,5], [5,4], [5,3]]), //randomize this to straight line somewhere
-            tailEndCache: null,
-            direction: null,
-            appleLocation: null,
-            intervalId: intervalId,
-            inputLocked: false
+            isPlaying: false, //keeps track of whether the game is in progress
+            bodyParts: new Deque([[5,5], [5,4], [5,3]]), //contains the locations for head and all the tail parts of the snake (needs to initially be randomized in straight line)
+            tailEndCache: null, //the previous end of the tail for the snake before moving, used for adding on tail parts
+            direction: null, //the direction that the snake is traveling: U, D, L, R
+            appleLocation: null, //location of the apple in the board
+            intervalId: intervalId, //not currently in use - maybe for debug purposes or additional featurs in the future
+            inputLocked: false //to prevent multiple inputs in quick succession
         };
         console.log(this.state);
     }
 
     handleKeyDown(event) {
         if (!this.state.inputLocked && (event.key === 'ArrowUp' || event.key === 'ArrowDown' || event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
-            //quick presses between non-opposite then opposite causes problems
             var direction = this.state.direction;
             if (event.key === 'ArrowUp' && this.state.direction !== 'D') {
                 direction = 'U';
@@ -117,6 +116,7 @@ class Game extends Component {
                 direction: null
             });
             alert('Game over!');
+            return;
         }
 
         //combine with above maybe?
@@ -127,6 +127,7 @@ class Game extends Component {
                     direction: null
                 });
                 alert('Game over!');
+                return;
             }
         }
 

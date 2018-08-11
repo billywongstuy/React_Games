@@ -2,34 +2,29 @@ import React, {Component} from 'react';
 import './Board.css';
 import * as Deque from 'double-ended-queue';
 
-//different values: H (head), B (body), F (fruit), null (empty)
 class Board extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            width: this.props.width,
-            height: this.props.height
-        }
     }
 
-    renderSquare(rowNum, squareNum) {
+    renderSquare(rowNum, colNum) {
         const filledSquares = {};
         for (var i = 0; i < this.props.bodyParts.length; i++) {
-            if (!filledSquares.hasOwnProperty(this.props.bodyParts.get(i).join(','))) {
-                filledSquares[this.props.bodyParts.get(i).join(',')] = (i === 0) ? 'square head' : 'square tail';
+            const bodyPartKey = this.props.bodyParts.get(i).join(',');
+            if (!filledSquares.hasOwnProperty(bodyPartKey)) {
+                filledSquares[bodyPartKey] = (i === 0) ? 'square head' : 'square tail';
             }
         }
         if (this.props.appleLocation) {
             filledSquares[this.props.appleLocation.join(',')] = 'square apple';
         }
 
-        const key = rowNum + ',' + squareNum;
-        if (filledSquares.hasOwnProperty(key)) {
-            return <div className={filledSquares[key]}></div>
+        const squareKey = rowNum + ',' + colNum;
+        if (filledSquares.hasOwnProperty(squareKey)) {
+            return <div className={filledSquares[squareKey]}></div>
         }
-
         return (
-            <div className="square"></div>
+            <div className='square'></div>
         );
     }
 
@@ -64,8 +59,7 @@ class Board extends Component {
                     {tablebody}
                 </tbody>
             </table>
-        )
-
+        );
     }
 }
 
