@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
-//import './Game.css'
+import './UserButtons.css'
 
 class UserButtons extends Component {
     render() {
         return (
-            <button type='button' onClick={() => this.props.onClick()} disabled={this.props.isPlaying}>
-                RESET
-            </button>
+            <div className='userButtons'>
+                <button type='button' className='resetButton' onClick={() => this.props.onClick()} disabled={this.props.isPlaying}>
+                    Reset
+                </button>
+            </div>
         );
     }
 }

@@ -155,14 +155,14 @@ class Game extends Component {
     }
 
     componentDidMount() {
-        document.addEventListener("keydown", this.handleKeyDown);
+        document.addEventListener('keydown', this.handleKeyDown);
     }
 
     render() {
         //NEED PRETTIER SCORE COUNT, REPLAY BUTTON
         return (
             <div>
-                Score: {this.state.score}
+                <label for='score' className='scoreLabel'>Score: {this.state.score}</label>
                 <Board
                     width={this.props.width}
                     height={this.props.height}
