@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Board from './Board';
-//css import
+import UserButtons from './UserButtons';
+import './Game.css'
 import * as Deque from 'double-ended-queue';
 
 
@@ -17,6 +18,7 @@ class Game extends Component {
         const intervalId = setInterval(this.runTurn, 300);
         this.state = {
             isPlaying: false, //keeps track of whether the game is in progress
+            score: 0, //keeps track of game score
             bodyParts: new Deque([[5,5], [5,4], [5,3]]), //contains the locations for head and all the tail parts of the snake (needs to initially be randomized in straight line)
             tailEndCache: null, //the previous end of the tail for the snake before moving, used for adding on tail parts
             direction: null, //the direction that the snake is traveling: U, D, L, R
@@ -24,7 +26,6 @@ class Game extends Component {
             intervalId: intervalId, //not currently in use - maybe for debug purposes or additional featurs in the future
             inputLocked: false //to prevent multiple inputs in quick succession
         };
-        console.log(this.state);
     }
 
     handleKeyDown(event) {
@@ -132,13 +133,25 @@ class Game extends Component {
         }
 
         if (head[0] === appleLocation[0] && head[1] === appleLocation[1]) {
-            this.setState({appleLocation: null});
+            this.setState({appleLocation: null, score: this.state.score + 1});
             this.generateApple();
             this.forceUpdate(); //kind of hacky
-            //add a tail part
             bodyParts.push(this.state.tailEndCache);
             this.setState({bodyParts: bodyParts});
         }
+    }
+
+    resetGame() {
+        //maybe store this somewhere?
+        this.setState({
+            isPlaying: false, //keeps track of whether the game is in progress
+            score: 0, //keeps track of game score
+            bodyParts: new Deque([[5,5], [5,4], [5,3]]), //contains the locations for head and all the tail parts of the snake (needs to initially be randomized in straight line)
+            tailEndCache: null, //the previous end of the tail for the snake before moving, used for adding on tail parts
+            direction: null, //the direction that the snake is traveling: U, D, L, R
+            appleLocation: null, //location of the apple in the board
+            inputLocked: false //to prevent multiple inputs in quick succession
+        });
     }
 
     componentDidMount() {
@@ -146,14 +159,19 @@ class Game extends Component {
     }
 
     render() {
+        //NEED PRETTIER SCORE COUNT, REPLAY BUTTON
         return (
             <div>
-                <div>Hello</div>
+                Score: {this.state.score}
                 <Board
                     width={this.props.width}
                     height={this.props.height}
                     bodyParts={this.state.bodyParts}
                     appleLocation={this.state.appleLocation}
+                />
+                <UserButtons
+                    onClick={() => this.resetGame()}
+                    isPlaying={this.state.isPlaying}
                 />
             </div>
         );

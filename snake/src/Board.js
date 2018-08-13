@@ -1,11 +1,7 @@
 import React, {Component} from 'react';
 import './Board.css';
-import * as Deque from 'double-ended-queue';
 
 class Board extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     renderSquare(rowNum, colNum) {
         const filledSquares = {};
