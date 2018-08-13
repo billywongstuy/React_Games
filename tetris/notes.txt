@@ -1,0 +1,39 @@
+Controls:
+L + R - left and right movement
+
+Spacebar - hard drop
+Down - soft drop
+
+Up - rotate 90 degrees
+
+
+Pieces
+
+..
+..
+
+yellow
+
+
+....
+light blue
+
+ .
+...
+violet
+
+  .
+...
+orange
+
+.
+...
+blue
+
+ ..
+..
+light green
+
+..
+ ..
+red
