@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 //import Board from './Board';
-import './Game.css'
+import './Game.css';
+import {TetriminoFactory} from './Tetrimino';
 
 //need board
 //need side bar
@@ -50,6 +51,11 @@ class Board extends Component {
 class Game extends Component {
     constructor(props) {
         super(props);
+        const tf = new TetriminoFactory();
+        const i = tf.getNewI();
+        console.log(i.squares);
+        i.rotateRightNinety();
+        console.log(i.squares);
     }
 
     render() {

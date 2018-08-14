@@ -7,7 +7,7 @@ Down - soft drop
 Up - rotate 90 degrees
 
 
-Pieces
+Pieces (colors vary depending on version)
 
 ..
 ..
@@ -18,16 +18,16 @@ yellow
 ....
 light blue
 
- .
 ...
+ .
 violet
 
-  .
 ...
+  .
 orange
 
-.
 ...
+.
 blue
 
  ..
