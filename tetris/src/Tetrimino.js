@@ -29,14 +29,9 @@ class Tetrimino {
             const cx = this.squares[this.centerIndex][0];
             const cy = this.squares[this.centerIndex][1];
             for (var i = 0; i < this.squares.length; i++) {
-                if (i !== this.centerIndex) {
-                    const x = this.squares[i][0];
-                    const y = this.squares[i][1];
-                    squares.push([(y - cy) + cx, (x - cx) + cx]);
-                }
-                else {
-                    squares.push(this.squares[i]);
-                }
+                const x = this.squares[i][0];
+                const y = this.squares[i][1];
+                squares.push([(y - cy) + cx, -(x - cy) + cx]);
             }
             this.squares = squares;
         }

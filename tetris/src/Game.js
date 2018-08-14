@@ -51,11 +51,9 @@ class Board extends Component {
 class Game extends Component {
     constructor(props) {
         super(props);
-        const tf = new TetriminoFactory();
-        const i = tf.getNewI();
-        console.log(i.squares);
-        i.rotateRightNinety();
-        console.log(i.squares);
+        this.state = {
+            tetriminoFactory: new TetriminoFactory()
+        }
     }
 
     render() {
@@ -63,6 +61,7 @@ class Game extends Component {
             <Board
                 width={this.props.width}
                 height={this.props.height}
+                tetriminoFactory={this.state.tetriminoFactory}
             />
         );
     }
